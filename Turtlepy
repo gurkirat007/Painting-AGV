@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+!/usr/bin/env python3
 import sys
 import traceback
 import rospy
@@ -23,27 +23,30 @@ def pose_callback(pose: Pose):
     vel.angular.x=0
     vel.angular.y=0
     vel.angular.z=0
-    list1=[(3,10),(5,9),(5,7),(6,7),(7,5),(4,5),(3,6)]
+    list1=[3,5]
+    list2=[10,9]
+    #,(5,7),(6,7),(7,5),(4,5),(3,6)]
+    l1=len(list1)
+    l2=len(list2)
     while not rospy.is_shutdown():
         pub.publish(vel)
-        for i in range(1,1+i):
-            x1=list1[i][0]
-            y1=list1[i][1]
-            x2=list1[i+1][0]
-            y2=list1[i+1][1]
-            m=(y2-y1)/(x2-x1)
-            th=math.atan(m)
-            t0=rospy.Time.now().to_sec
-            vel.angular.z=1
-            while(curangle<th):
-                pub.publish(vel)
-                t1=rospy.Time.now().to_sec()
-                curangle=angspeed*(t1-t0)
-            if curangle==th:
-                vel.angular.z=0
-                vel.linear.x=1
-            if pose.x==x2 and pose.y==y2:
-                vel.linear.x=0
+        x1=list1[0]
+        y1=list2[0]
+        x2=list1[1]
+        y2=list2[1]
+        m=(y2-y1)/(x2-x1)
+        th=math.atan(m)
+        t0=rospy.Time.now().to_sec
+        vel.angular.z=1
+        while(curangle<th):
+            pub.publish(vel)
+            t1=rospy.Time.now().to_sec()
+            curangle=angspeed*(t1-t0)
+        if curangle==th:
+            vel.angular.z=0
+            vel.linear.x=1
+        if pose.x==x2 and pose.y==y2:
+            vel.linear.x=0
                 
 
     
@@ -61,7 +64,7 @@ def main():
     print("	We are doing Successfully!")
 
 
-if name == "main":
+if __name__ == "__main__":
     rospy.init_node("task_0")
     pub = rospy.Publisher("/turtle1/cmd_vel", Twist, queue_size=10)
     sub = rospy.Subscriber("/turtle1/pose", Pose, callback=pose_callback)
@@ -69,3 +72,4 @@ if name == "main":
     rate = rospy.Rate(10)
 
     rospy.spin()
+
